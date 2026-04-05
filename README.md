@@ -39,9 +39,63 @@ A React-based web application to manage Salesforce Validation Rules using OAuth 
 
 ## ⚙️ Setup Instructions
 
-### 1. Clone the repository
+1. Clone the repository
 
-```bash
-git clone https://github.com/Shubham3181/salesforce-validation-rule-manager.git
-cd salesforce-validation-rule-manager
-```
+   git clone https://github.com/Shubham3181/salesforce-validation-rule-manager.git  
+   cd salesforce-validation-rule-manager
+
+2. Install dependencies
+
+   npm install
+
+3. Run the project
+
+   npm start
+
+4. Open in browser
+
+   http://localhost:3000
+
+---
+
+## 🔐 Salesforce Setup Required
+
+1. Create a Salesforce Developer Org
+   - Sign up and log in to your Salesforce Developer account
+
+2. Create validation rules on the Account object
+   - Account_Name_Required
+   - Phone_Validation
+   - Revenue_Validation
+   - Website_Validation
+   - Industry_Required
+
+3. Create a Connected App / External Client App
+   - Go to Setup → App Manager
+   - Create a new Connected App / External Client App
+   - Enable OAuth settings
+   - Add callback URL: http://localhost:3000/callback
+   - Copy Client ID (Consumer Key) and use it in your React app
+
+4. Add CORS origin in Salesforce
+   - Go to Setup → CORS
+   - Add: http://localhost:3000
+
+5. After deployment  
+   Replace with your live URL:
+   - Callback: https://your-deployed-app-url/callback
+   - CORS: https://your-deployed-app-url
+
+---
+
+## 🔒 Security Note
+
+- Client Secret is NOT stored in this application
+- Access tokens are generated dynamically after login
+- No sensitive credentials are hardcoded except the public Client ID
+
+---
+
+## 👨‍💻 Author
+
+Shubham Ghaytadkar
