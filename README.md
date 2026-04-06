@@ -83,8 +83,8 @@ A React-based web application to manage Salesforce Validation Rules using OAuth 
 
 5. After deployment  
    Replace with your live URL:
-   - Callback: https://your-deployed-app-url/callback
-   - CORS: https://your-deployed-app-url
+   - Callback: https://salesforce-validation-rule-manager-pi.vercel.app/callback
+   - CORS: https://salesforce-validation-rule-manager-pi.vercel.app
 
 ---
 
