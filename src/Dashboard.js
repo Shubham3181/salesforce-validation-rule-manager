@@ -17,11 +17,17 @@ function Dashboard() {
       setError("");
       setDeployMessage("");
 
+      if (!accessToken || !instanceUrl) {
+        throw new Error("Missing access token or instance URL.");
+      }
+
       const query =
         "SELECT Id, ValidationName, Active, EntityDefinition.QualifiedApiName FROM ValidationRule";
 
       const response = await fetch(
-        `${instanceUrl}/services/data/v59.0/tooling/query/?q=${encodeURIComponent(query)}`,
+        `${instanceUrl}/services/data/v59.0/tooling/query/?q=${encodeURIComponent(
+          query
+        )}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -33,13 +39,16 @@ function Dashboard() {
 
       if (!response.ok) {
         throw new Error(
-          data?.[0]?.message || data?.message || "Failed to fetch validation rules"
+          data?.[0]?.message ||
+            data?.message ||
+            "Failed to fetch validation rules."
         );
       }
 
       setRules(data.records || []);
     } catch (err) {
-      setError(err.message || "Failed to fetch validation rules");
+      setError(err.message || "Failed to fetch validation rules.");
+      setRules([]);
     } finally {
       setLoading(false);
     }
@@ -57,7 +66,9 @@ function Dashboard() {
     const singleRuleQuery = `SELECT Id, Metadata FROM ValidationRule WHERE Id = '${rule.Id}'`;
 
     const getResponse = await fetch(
-      `${instanceUrl}/services/data/v59.0/tooling/query/?q=${encodeURIComponent(singleRuleQuery)}`,
+      `${instanceUrl}/services/data/v59.0/tooling/query/?q=${encodeURIComponent(
+        singleRuleQuery
+      )}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -69,14 +80,16 @@ function Dashboard() {
 
     if (!getResponse.ok) {
       throw new Error(
-        getData?.[0]?.message || getData?.message || "Failed to fetch rule metadata"
+        getData?.[0]?.message ||
+          getData?.message ||
+          "Failed to fetch rule metadata."
       );
     }
 
     const fullRule = getData.records?.[0];
 
     if (!fullRule || !fullRule.Metadata) {
-      throw new Error("Rule metadata not found");
+      throw new Error("Rule metadata not found.");
     }
 
     const updateResponse = await fetch(
@@ -98,7 +111,7 @@ function Dashboard() {
 
     if (!updateResponse.ok) {
       const errText = await updateResponse.text();
-      throw new Error(errText || "Failed to update rule");
+      throw new Error(errText || "Failed to update rule.");
     }
   };
 
@@ -123,6 +136,11 @@ function Dashboard() {
   };
 
   const enableAllRules = async () => {
+    if (rules.length === 0) {
+      setError("No validation rules found.");
+      return;
+    }
+
     const confirmed = window.confirm(
       "Are you sure you want to enable all validation rules?"
     );
@@ -148,6 +166,11 @@ function Dashboard() {
   };
 
   const disableAllRules = async () => {
+    if (rules.length === 0) {
+      setError("No validation rules found.");
+      return;
+    }
+
     const confirmed = window.confirm(
       "Are you sure you want to disable all validation rules?"
     );
@@ -173,7 +196,9 @@ function Dashboard() {
   };
 
   const deployChanges = () => {
-    setDeployMessage("Changes are already deployed to Salesforce successfully.");
+    setDeployMessage(
+      "Changes are already deployed to Salesforce successfully."
+    );
     setError("");
   };
 
@@ -201,7 +226,8 @@ function Dashboard() {
           <div>
             <h1 className="hero-title">Salesforce Validation Rule Manager</h1>
             <p className="hero-subtitle">
-              Manage Salesforce validation rules with OAuth, Tooling API, and real-time updates.
+              Manage Salesforce validation rules with OAuth, Tooling API, and
+              real-time updates.
             </p>
           </div>
 
@@ -275,7 +301,9 @@ function Dashboard() {
           </div>
         </div>
 
-        {deployMessage && <div className="alert alert-success">{deployMessage}</div>}
+        {deployMessage && (
+          <div className="alert alert-success">{deployMessage}</div>
+        )}
         {error && <div className="alert alert-error">{error}</div>}
         {loading && (
           <div className="alert alert-info loading-box">
@@ -290,7 +318,11 @@ function Dashboard() {
             <p>{filteredRules.length} rule(s) shown</p>
           </div>
 
-          {filteredRules.length === 0 ? (
+          {!loading && !error && rules.length === 0 ? (
+            <div className="empty-state">
+              No validation rules found in this Salesforce org.
+            </div>
+          ) : filteredRules.length === 0 ? (
             <div className="empty-state">No matching validation rules found.</div>
           ) : (
             <div className="table-wrapper">
