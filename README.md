@@ -86,7 +86,7 @@ A React-based web application to manage Salesforce Validation Rules using OAuth 
    - Callback: https://salesforce-validation-rule-manager-pi.vercel.app/callback
    - CORS: https://salesforce-validation-rule-manager-pi.vercel.app
 
-⚠️ Note: This app requires existing validation rules in Salesforce to display data.
+⚠️ Note: This app uses Salesforce OAuth. Reviewers can log in using any Salesforce Developer Org, but that org must have existing validation rules and Tooling API access to display and manage rules.
 
 ---
 
